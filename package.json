@@ -1,0 +1,29 @@
+{
+  "name": "fift-bind",
+  "version": "0.0.1",
+  "description": "Fift (Telegram Open Network) runner for Node.js",
+  "main": "index.js",
+  "scripts": {
+    "lint": "npx eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:APshenkin/fift-node.git"
+  },
+  "keywords": [
+    "fift",
+    "ton",
+    "telegram"
+  ],
+  "dependencies": {
+    "ffi": "^2.3.0",
+    "ref-array": "^1.2.0"
+  },
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.16.0"
+  },
+  "author": "Andrey Pshenkin <andrey.pshenkin@gmail.com>",
+  "license": "MIT"
+}
