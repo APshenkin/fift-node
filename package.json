@@ -1,5 +1,5 @@
 {
-  "name": "fift-bind",
+  "name": "fift-node",
   "version": "0.0.1",
   "description": "Fift (Telegram Open Network) runner for Node.js",
   "main": "index.js",
