@@ -6,7 +6,7 @@ It allows to create shared library that this project use.
 
 The library is currently compiled only for Mac OS.
 
-Binding are created using (FFI project)[https://www.npmjs.com/package/node-ffi]
+Binding are created using [FFI project](https://www.npmjs.com/package/node-ffi)
 
 ## Features
 * run Fift programmatically
