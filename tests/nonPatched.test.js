@@ -3,7 +3,7 @@ const Fift = require('../index');
 
 const fift = new Fift({ usePatchedFift: false });
 
-describe('test patched contracts', () => {
+describe('test non patched contracts', () => {
   it('should create wallet without PK', async () => {
     const res = await fift.createNewWallet({
       workchainId: '-1',
