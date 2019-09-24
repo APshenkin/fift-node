@@ -12,6 +12,8 @@ Binding are created using [FFI project](https://www.npmjs.com/package/node-ffi)
 * run Fift programmatically
 * receive result directly from code (you don't need to read files)
 * ability to pass hex strings as arguments (custom word in Fift)
+* pass files to your Fift run
+* predefined methods to create wallet, create message to testgiver, create message to send grams
 
 ## Installation
 ```Shell
@@ -19,7 +21,7 @@ $ npm install --save fift-node
 ```
 
 ## Usage
-Check example folder
+Check `test` folder
 
 ## Current State
 THIS IS NOT FOR COMMERTIAL USE, BECAUSE IT MAY BE UNSTABLE!!!

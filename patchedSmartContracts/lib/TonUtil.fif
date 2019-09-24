@@ -19,7 +19,7 @@ library TonUtil // TON Blockchain Fift Library
   dup priv>pub swap
 } : load-keypair
 
-// Private key load/generate
+// Load Private key from hex
 // ( fname -- pubkey privkey )
 { $x>B dup Blen 32 <> abort"Private key must be exactly 32 bytes long"
   dup priv>pub swap
@@ -48,6 +48,12 @@ library TonUtil // TON Blockchain Fift Library
 // ( wc addr fname -- )  Save address and print message
 { dup ."(Saving address to file " type .")" cr save-address
 } : save-address-verbose
+
+// ( fname -- wc addr )  Load address from hex
+{ $x>B 32 B|
+  dup Blen { 32 B>i@ } { drop Basechain } cond
+  swap 256 B>u@
+} : load-address-hex
 
 // ( fname -- wc addr )  Load address from file
 { file>B 32 B|

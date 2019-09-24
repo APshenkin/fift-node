@@ -4,7 +4,8 @@
   "description": "Fift (Telegram Open Network) runner for Node.js",
   "main": "index.js",
   "scripts": {
-    "lint": "npx eslint ."
+    "lint": "npx eslint .",
+    "test": "mocha \"tests/**/*.test.js\""
   },
   "repository": {
     "type": "git",
@@ -22,7 +23,8 @@
   "devDependencies": {
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.16.0"
+    "eslint-plugin-import": "^2.16.0",
+    "mocha": "^6.2.0"
   },
   "author": "Andrey Pshenkin <andrey.pshenkin@gmail.com>",
   "license": "MIT"

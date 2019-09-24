@@ -24,7 +24,7 @@ if (platform === 'darwin') {
 const callback = ffi.Function('void', [StringArray, 'CString']);
 
 const fiftLib = ffi.Library(fiftlibLoc, {
-  run: ['void', ['CString', 'CString', StringArray, 'int', StringArray, 'int', callback]],
+  run: ['void', ['CString', 'CString', StringArray, 'int', StringArray, 'int', StringArray, 'int', callback]],
 });
 
 module.exports = fiftLib;

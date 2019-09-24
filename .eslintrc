@@ -1,5 +1,9 @@
 {
   "extends": "airbnb-base",
+  "globals": {
+    "describe": false,
+    "it": false
+  },
   "rules": {
     "no-console": [
       "error",
