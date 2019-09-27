@@ -17,6 +17,8 @@
     "telegram"
   ],
   "dependencies": {
+    "base64url": "^3.0.1",
+    "crc16": "^1.0.1",
     "ffi": "^2.3.0",
     "ref-array": "^1.2.0"
   },
