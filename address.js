@@ -30,7 +30,7 @@ class Address {
     return `${this.workchainId}:${this.publicKey}`.toUpperCase();
   }
 
-  toUserFriendly(nonBounce = false) {
+  toUserFriendly({ nonBounce = false } = {}) {
     const tag = nonBounce ? 0x51 : 0x11;
 
     const payload = Buffer.alloc(34);
