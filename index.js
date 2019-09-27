@@ -1,4 +1,5 @@
 const fiftLib = require('./fiftLib');
+const Address = require('./address');
 
 class Fift {
   constructor({ fiftLocation, libLocation, usePatchedFift = false }) {
@@ -57,7 +58,7 @@ class Fift {
 
     return promise.then(res => ({
       privateKey: privateKey || res.files['new-wallet.pk'],
-      address: res.files['new-wallet.addr'],
+      address: Address.parseFromFift(res.files['new-wallet.addr']),
       creatingQuery: res.files['new-wallet-query.boc'],
     }));
   }
@@ -84,7 +85,7 @@ class Fift {
   }
 
   sendGrams({
-    filenameBase, filesDir, destAddress, seqNo, amount, privateKey, sourceAddress,
+    filenameBase, filesDir, destAddress, seqNo, amount, privateKey, workchainId,
   }) {
     let promise;
     if (typeof privateKey === 'undefined') {
@@ -98,11 +99,11 @@ class Fift {
         generatedFiles: ['wallet-query.boc'],
       });
     } else {
-      promise = this.run({
+      promise = Address.parseFromWalletPrivateKey({ privateKey, workchainId, fift: this }).then(sourceAddress => this.run({
         file: `${this.fiftLocation}/wallet-from-pk.fif`,
-        args: [privateKey, sourceAddress, destAddress, seqNo, amount],
+        args: [privateKey, sourceAddress.toFift(), destAddress, seqNo, amount],
         generatedFiles: ['wallet-query.boc'],
-      });
+      }));
     }
 
     return promise.then(res => res.files['wallet-query.boc']);

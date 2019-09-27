@@ -28,8 +28,6 @@ describe('test non patched contracts', () => {
     const res = await fift.sendGrams({
       filesDir: __dirname,
       filenameBase: 'my_wallet_name',
-      // privateKey: '4B8D1BBCB692A02DAD73FE9BD8A58A107CC320031EDA3B79E4C890CB0A38171F',
-      // sourceAddress: '3F5879DF600C4D1E2BBCD1AF8B6F17E3A52107F3AC826E071AB6FE1BFDE17FFCFFFFFFFF',
       destAddress: '0f8gBl8-wqN_wM38jE6Pel_Wg7ma0Ri86H-DpvQpX-sRxey6',
       seqNo: '0x9A15',
       amount: '6.666',
