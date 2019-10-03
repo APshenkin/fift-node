@@ -17,6 +17,8 @@ if (platform === 'darwin') {
     SetDllDirectoryA: ['bool', ['string']],
   });
   kernel32.SetDllDirectoryA(path.join(__dirname, '/lib'));
+} else if (platform === 'linux') {
+  fiftlibLoc = path.join(__dirname, '/lib/libfiftlib.so');
 } else {
   throw new Error('unsupported platform for libfift');
 }

@@ -4,7 +4,7 @@ Node JS bindings for Fift compiler (for Telegram Open Network). You can run Fift
 Current TON implementation don't allow to run Fift programmatically. So I created a small patch for it [here](https://github.com/APshenkin/ton)
 It allows to create shared library that this project use.
 
-The library is currently compiled only for Mac OS and Windows x64.
+The library is currently compiled only for Mac OS and Windows x64 and Linux x64.
 
 Binding are created using [FFI project](https://www.npmjs.com/package/node-ffi)
 
