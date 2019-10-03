@@ -63,6 +63,14 @@ class Fift {
     }));
   }
 
+  getWalletAddress({ workchainId, publicKey }) {
+    return this.run({
+      file: `${this.fiftLocation}/wallet-address-from-pub.fif`,
+      args: [workchainId, publicKey, 'new-wallet'],
+      generatedFiles: ['new-wallet.addr'],
+    }).then(res => Address.parseFromFift(res.files['new-wallet.addr']));
+  }
+
   receiveTestGrams({
     destAddress, seqNo, amount = '6.666', testGiverAddress,
   }) {
@@ -85,7 +93,7 @@ class Fift {
   }
 
   sendGrams({
-    filenameBase, filesDir, destAddress, seqNo, amount, privateKey, workchainId,
+    filenameBase, filesDir, destAddress, seqNo, amount, privateKey, workchainId, message = 'TEST',
   }) {
     let promise;
     if (typeof privateKey === 'undefined') {
@@ -101,7 +109,7 @@ class Fift {
     } else {
       promise = Address.parseFromWalletPrivateKey({ privateKey, workchainId, fift: this }).then(sourceAddress => this.run({
         file: `${this.fiftLocation}/wallet-from-pk.fif`,
-        args: [privateKey, sourceAddress.toFift(), destAddress, seqNo, amount],
+        args: [privateKey, sourceAddress.toFift(), message, destAddress, seqNo, amount],
         generatedFiles: ['wallet-query.boc'],
       }));
     }

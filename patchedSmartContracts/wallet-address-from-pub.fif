@@ -2,17 +2,17 @@
 "TonUtil.fif" include
 "Asm.fif" include
 
-{ ."usage: " @' $0 type ." <workchain-id> <private-key> [<filename-base>]" cr
-  ."Creates a new wallet in specified workchain, with private key saved to or loaded from <filename-base>.pk" cr
+{ ."usage: " @' $0 type ." <workchain-id> <public-key> <filename-base>" cr
+  ."Creates a wallet address in specified workchain, for public key" cr
   ."('new-wallet.pk' by default)" cr 1 halt
 } : usage
 $# 1- -3 and ' usage if
 
 $1 parse-workchain-id =: wc    // set workchain id from command line argument
-$2 =: pk
+$2 =: pub
 def? $3 { @' $3 } { "new-wallet" } cond constant file-base
 
-."Creating new wallet in workchain " wc . cr
+."Receive wallet address in workchain " wc . cr
 
 // Create new simple wallet
 <{ SETCP0 DUP IFNOTRET // return if recv_internal
@@ -40,8 +40,8 @@ def? $3 { @' $3 } { "new-wallet" } cond constant file-base
 }>c // >libref
 // code
 <b 0 32 u,
-   pk load-keypair-hex
-   constant wallet_pk
+   pub
+   $x>B
    B,
 b> // data
 null // no libraries
@@ -53,11 +53,3 @@ dup hash wc swap 2dup 2constant wallet_addr
 2dup file-base +".addr" save-address-verbose
 ."Non-bounceable address (for init): " 2dup 7 .Addr cr
 ."Bounceable address (for later access): " 6 .Addr cr
-<b 0 32 u, b>
-dup ."signing message: " <s csr. cr
-dup hash wallet_pk ed25519_sign_uint rot
-<b b{1000100} s, wallet_addr addr, b{000010} s, swap <s s, b{0} s, swap B, swap <s s, b>
-dup ."External message for initialization is " <s csr. cr
-2 boc+>B dup Bx. cr
-file-base +"-query.boc" tuck B>file
-."(Saved wallet creating query to file " type .")" cr

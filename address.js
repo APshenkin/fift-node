@@ -33,6 +33,11 @@ class Address {
     return wallet.address;
   }
 
+  static async parseFromWalletPublicKey({ publicKey, workchainId, fift }) {
+    const address = await fift.getWalletAddress({ workchainId: workchainId.toString(), publicKey });
+    return address;
+  }
+
   toRaw() {
     return `${this.workchainId}:${this.account.toString('hex')}`.toUpperCase();
   }

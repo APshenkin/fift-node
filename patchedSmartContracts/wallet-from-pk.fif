@@ -1,22 +1,20 @@
 #!/usr/bin/env fift -s
 "TonUtil.fif" include
 
-{ ."usage: " @' $0 type ." <filename-base> <dest-addr> <seqno> <amount> [-B <body-boc>] [<savefile>]" cr
+{ ."usage: " @' $0 type ." <private-key> <source-addr> <message> <dest-addr> <seqno> <amount> [<savefile>]" cr
   ."Creates a request to simple wallet created by new-wallet.fif, with private key loaded from file <filename-base>.pk "
   ."and address from <filename-base>.addr, and saves it into <savefile>.boc ('wallet-query.boc' by default)" cr 1 halt
 } : usage
-def? $6 { @' $5 "-B" $= { @' $6 =: body-boc-file [forget] $6 def? $7 { @' $7 =: $5 [forget] $7 } { [forget] $5 } cond
-  @' $# 2- =: $# } if } if
-$# dup 4 < swap 5 > or ' usage if
 
 true constant bounce
 
 $1 =: pk
 $2 =: address
-$3 bounce parse-load-address =: bounce 2=: dest_addr
-$4 parse-int =: seqno
-$5 $>GR =: amount
-def? $6 { @' $6 } { "wallet-query" } cond constant savefile
+$3 =: message
+$4 bounce parse-load-address =: bounce 2=: dest_addr
+$5 parse-int =: seqno
+$6 $>GR =: amount
+def? $7 { @' $7 } { "wallet-query" } cond constant savefile
 3 constant send-mode  // mode for SENDRAWMSG: +1 - sender pays fees, +2 - ignore errors
 
 address load-address-hex
@@ -24,7 +22,7 @@ address load-address-hex
 ."Source wallet address = " 2dup .addr cr 6 .Addr cr
 pk load-keypair-hex nip constant wallet_pk
 
-def? body-boc-file { @' body-boc-file file>B B>boc } { <b 0 32 u, "TEST" $, b> } cond
+def? body-boc-file { @' body-boc-file file>B B>boc } { <b 0 32 u, message $, b> } cond
 constant body-cell
 
 ."Transferring " amount .GR ."to account "
