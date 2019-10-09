@@ -53,7 +53,7 @@ class Address {
 
     const crc = crc16(payload);
 
-    return base64url(Buffer.concat([payload, Buffer.from(crc.toString(16), 'hex')]));
+    return base64url(Buffer.concat([payload, Buffer.from(crc.toString(16).padStart(4, '0'), 'hex')]));
   }
 
   toFift() {

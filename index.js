@@ -93,7 +93,7 @@ class Fift {
   }
 
   sendGrams({
-    filenameBase, filesDir, destAddress, seqNo, amount, privateKey, workchainId, message = 'TEST',
+    filenameBase, filesDir, destAddress, seqNo, amount, privateKey, workchainId, message = '',
   }) {
     let promise;
     if (typeof privateKey === 'undefined') {
@@ -109,7 +109,7 @@ class Fift {
     } else {
       promise = Address.parseFromWalletPrivateKey({ privateKey, workchainId, fift: this }).then(sourceAddress => this.run({
         file: `${this.fiftLocation}/wallet-from-pk.fif`,
-        args: [privateKey, sourceAddress.toFift(), message, destAddress, seqNo, amount],
+        args: [privateKey, sourceAddress.toFift(), destAddress, seqNo, amount, '-C', message],
         generatedFiles: ['wallet-query.boc'],
       }));
     }

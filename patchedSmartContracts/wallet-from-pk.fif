@@ -1,28 +1,36 @@
 #!/usr/bin/env fift -s
 "TonUtil.fif" include
 
-{ ."usage: " @' $0 type ." <private-key> <source-addr> <message> <dest-addr> <seqno> <amount> [<savefile>]" cr
+{ ."usage: " @' $0 type ." <filename-base> <dest-addr> <seqno> <amount> [-B <body-boc>] [-C <transfer-comment>] [<savefile>]" cr
   ."Creates a request to simple wallet created by new-wallet.fif, with private key loaded from file <filename-base>.pk "
   ."and address from <filename-base>.addr, and saves it into <savefile>.boc ('wallet-query.boc' by default)" cr 1 halt
 } : usage
+"" =: comment  // comment for simple transfers
+def? $7 { @' $6 dup "-B" $= swap "-C" $= tuck or
+  { @' $7 swap { =: comment } { =: body-boc-file } cond [forget] $7
+    def? $8 { @' $8 =: $6 [forget] $8 } { [forget] $6 } cond
+  @' $# 2- =: $#
+  } if
+} if
+$# dup 4 < swap 5 > or ' usage if
 
 true constant bounce
 
 $1 =: pk
 $2 =: address
-$3 =: message
-$4 bounce parse-load-address =: bounce 2=: dest_addr
-$5 parse-int =: seqno
-$6 $>GR =: amount
-def? $7 { @' $7 } { "wallet-query" } cond constant savefile
+$3 bounce parse-load-address =: bounce 2=: dest_addr
+$4 parse-int =: seqno
+$5 $>GR =: amount
+def? $6 { @' $6 } { "wallet-query" } cond constant savefile
 3 constant send-mode  // mode for SENDRAWMSG: +1 - sender pays fees, +2 - ignore errors
+// "" 1 { 69091 * 1+ 65535 and tuck 2521 / 65 + hold swap } 1000 times drop =: comment
 
 address load-address-hex
 2dup 2constant wallet_addr
 ."Source wallet address = " 2dup .addr cr 6 .Addr cr
 pk load-keypair-hex nip constant wallet_pk
 
-def? body-boc-file { @' body-boc-file file>B B>boc } { <b 0 32 u, message $, b> } cond
+def? body-boc-file { @' body-boc-file file>B B>boc } { comment simple-transfer-body } cond
 constant body-cell
 
 ."Transferring " amount .GR ."to account "
