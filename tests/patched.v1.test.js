@@ -1,9 +1,9 @@
 const assert = require('assert');
 const Fift = require('../index');
 
-const fift = new Fift({ usePatchedFift: true, walletVersion: 'v2' });
+const fift = new Fift({ usePatchedFift: true });
 
-describe('test patched contracts wallet v2', () => {
+describe('test patched contracts wallet v1', () => {
   it('should create wallet from pk', async () => {
     const res = await fift.createNewWallet({
       workchainId: '-1', privateKey: '3986E77DB85235C426D8DE224B1F095636F414CDF40B954419733E4BF3F3F0BC',
@@ -11,8 +11,8 @@ describe('test patched contracts wallet v2', () => {
 
     assert.equal(res.privateKey, '3986E77DB85235C426D8DE224B1F095636F414CDF40B954419733E4BF3F3F0BC');
     assert.equal(res.address.workchainId, -1);
-    assert.equal(res.address.account.toString('hex'), '472c8515f7f841da3b3c18214c0fab392a900497333a2dbd2528cec741558ada');
-    assert.equal(res.creatingQuery, 'B5EE9C724101030100ED0002D789FE8E590A2BEFF083B476783042981F56725520092E66745B7A4A519D8E82AB15B4119D7CB36CD52E33000AB738B01AC3D71BA8C5ECA15DB322461345B01FBF6B11E4C3FDFD550CF5BA5A255DA0B618410CBC1C0B5FE8AA3D888BD104CE410D37A9E0800000001FFFFFFFF0010200AAFF0020DD2082014C97BA9730ED44D0D70B1FE0A4F2608308D71820D31FD31F01F823BBF263ED44D0D31FD3FFD15131BAF2A103F901541042F910F2A2F800029320D74A96D307D402FB00E8D1A4C8CB1FCBFFC9ED54004800000000C9FFBEF20D30674EB53F7BCBA6D84F9A2DCBEFA99DE0C880E53A0983132565C43E7D6539');
+    assert.equal(res.address.account.toString('hex'), 'e9ab61f13126417b1dfcdc3c2c3dc2a23cde3850b809428b2f82a8ed6d65799d');
+    assert.equal(res.creatingQuery, 'B5EE9C724101030100E50002CF89FFD356C3E2624C82F63BF9B878587B854479BC70A1701285165F0551DADACAF33A119FA17707D378153A6252833103EAEE1C5D2AF0B2301DF5C33B6833A655CCE8158010EFE92C632BB1091A76E0AE8C5620939D9F38D95F20EDC6AE67B3876FC000C000000010010200A2FF0020DD2082014C97BA9730ED44D0D70B1FE0A4F260810200D71820D70B1FED44D0D31FD3FFD15112BAF2A122F901541044F910F2A2F80001D31F3120D74A96D307D402FB00DED1A4C8CB1FCBFFC9ED54004800000000C9FFBEF20D30674EB53F7BCBA6D84F9A2DCBEFA99DE0C880E53A0983132565C494B6DA0B');
   });
 
   it('should create wallet address from public key', async () => {
@@ -21,7 +21,7 @@ describe('test patched contracts wallet v2', () => {
     });
 
     assert.equal(res.workchainId, -1);
-    assert.equal(res.account.toString('hex'), '472c8515f7f841da3b3c18214c0fab392a900497333a2dbd2528cec741558ada');
+    assert.equal(res.account.toString('hex'), 'e9ab61f13126417b1dfcdc3c2c3dc2a23cde3850b809428b2f82a8ed6d65799d');
   });
 
   it('should create wallet without PK', async () => {
@@ -77,7 +77,7 @@ describe('test patched contracts wallet v2', () => {
       amount: '6.666',
     });
 
-    assert.ok(res);
+    assert.equal(res, 'B5EE9C724101020100A20001CF88010EF039000F0CEAD74ECC3EAF7BFC6C97F50A133497FCA09A92F2E89C6AD74A8801F39184E4D204CE12FAD14B6538548BD2F047FCFEF082DB3772308761EA34BF318C3F81B94A29F614C9EE6C2EB20293A3F54346EF9D4DDE796D8B5D5E055430200004D0A81C01006A427F90032F9F6151BFE066FE462747BD2FEB41DCCD688C5E743FC1D37A14AFF588E2A80C6A98B40000000000000000000000000000A6670EAD');
   });
 
   it('should create send gram message with message hello', async () => {
@@ -90,7 +90,7 @@ describe('test patched contracts wallet v2', () => {
       message: 'hello',
     });
 
-    assert.ok(res);
+    assert.equal(res, 'B5EE9C724101020100AB0001CF89FF0EF039000F0CEAD74ECC3EAF7BFC6C97F50A133497FCA09A92F2E89C6AD74A880634A8D40354103D8A8170740FA11244A783BA19B5FF99E1D38B9F9DE7E6AF33AAFC3608D3FECD6F2B51085A1854D11887751706F3EC7F5FF68191F35CC7FFC0280004D0A81C01007C427F90032F9F6151BFE066FE462747BD2FEB41DCCD688C5E743FC1D37A14AFF588E2A80C6A98B400000000000000000000000000000000000068656C6C6FF72D2744');
   });
 
   it('should create send gram message using files', async () => {
@@ -102,27 +102,26 @@ describe('test patched contracts wallet v2', () => {
       amount: '6.666',
     });
 
-    assert.ok(res);
+    assert.equal(res, 'B5EE9C724101020100A20001CF88010EF039000F0CEAD74ECC3EAF7BFC6C97F50A133497FCA09A92F2E89C6AD74A8801F39184E4D204CE12FAD14B6538548BD2F047FCFEF082DB3772308761EA34BF318C3F81B94A29F614C9EE6C2EB20293A3F54346EF9D4DDE796D8B5D5E055430200004D0A81C01006A427F90032F9F6151BFE066FE462747BD2FEB41DCCD688C5E743FC1D37A14AFF588E2A80C6A98B40000000000000000000000000000A6670EAD');
   });
 
-  // its unable to compare files in v2 wallet because there is timeout feature
-  // it('should equal boc files when using usual fif send and patched', async () => {
-  //   const patched = await fift.sendGrams({
-  //     privateKey: 'df66ef003a3b924e5d6f284a9b0cb002bd061b5e8fc97ca566587400018899fb',
-  //     workchainId: 0,
-  //     destAddress: '0f8gBl8-wqN_wM38jE6Pel_Wg7ma0Ri86H-DpvQpX-sRxey6',
-  //     seqNo: '0x9A15',
-  //     amount: '6.666',
-  //   });
-  //
-  //   const ethalon = await fift.sendGrams({
-  //     filesDir: __dirname,
-  //     filenameBase: 'my_wallet_name',
-  //     destAddress: '0f8gBl8-wqN_wM38jE6Pel_Wg7ma0Ri86H-DpvQpX-sRxey6',
-  //     seqNo: '0x9A15',
-  //     amount: '6.666',
-  //   });
-  //
-  //   assert.equal(patched, ethalon);
-  // });
+  it('should equal boc files when using usual fif send and patched', async () => {
+    const patched = await fift.sendGrams({
+      privateKey: 'df66ef003a3b924e5d6f284a9b0cb002bd061b5e8fc97ca566587400018899fb',
+      workchainId: 0,
+      destAddress: '0f8gBl8-wqN_wM38jE6Pel_Wg7ma0Ri86H-DpvQpX-sRxey6',
+      seqNo: '0x9A15',
+      amount: '6.666',
+    });
+
+    const ethalon = await fift.sendGrams({
+      filesDir: __dirname,
+      filenameBase: 'my_wallet_name',
+      destAddress: '0f8gBl8-wqN_wM38jE6Pel_Wg7ma0Ri86H-DpvQpX-sRxey6',
+      seqNo: '0x9A15',
+      amount: '6.666',
+    });
+
+    assert.equal(patched, ethalon);
+  });
 });

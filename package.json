@@ -1,6 +1,6 @@
 {
   "name": "fift-node",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Fift (Telegram Open Network) runner for Node.js",
   "main": "index.js",
   "scripts": {
