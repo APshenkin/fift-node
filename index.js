@@ -44,13 +44,13 @@ class Fift {
     let promise;
     if (typeof privateKey === 'undefined') {
       promise = this.run({
-        file: `${this.fiftLocation}/new-wallet.fif`,
+        file: `${this.fiftLocation}/new-wallet-v2.fif`,
         args: [workchainId],
         generatedFiles: ['new-wallet.pk', 'new-wallet.addr', 'new-wallet-query.boc'],
       });
     } else {
       promise = this.run({
-        file: `${this.fiftLocation}/new-wallet-from-pk.fif`,
+        file: `${this.fiftLocation}/new-wallet-v2-from-pk.fif`,
         args: [workchainId, privateKey, 'new-wallet'],
         generatedFiles: ['new-wallet.addr', 'new-wallet-query.boc'],
       });
@@ -65,7 +65,7 @@ class Fift {
 
   getWalletAddress({ workchainId, publicKey }) {
     return this.run({
-      file: `${this.fiftLocation}/wallet-address-from-pub.fif`,
+      file: `${this.fiftLocation}/wallet-address-from-pub-v2.fif`,
       args: [workchainId, publicKey, 'new-wallet'],
       generatedFiles: ['new-wallet.addr'],
     }).then(res => Address.parseFromFift(res.files['new-wallet.addr']));
@@ -98,7 +98,7 @@ class Fift {
     let promise;
     if (typeof privateKey === 'undefined') {
       promise = this.run({
-        file: `${this.fiftLocation}/wallet.fif`,
+        file: `${this.fiftLocation}/wallet-v2.fif`,
         args: [`${filesDir}/${filenameBase}`, destAddress, seqNo, amount],
         additionalFiles: [
           `${filesDir}/${filenameBase}.addr`,
@@ -108,7 +108,7 @@ class Fift {
       });
     } else {
       promise = Address.parseFromWalletPrivateKey({ privateKey, workchainId, fift: this }).then(sourceAddress => this.run({
-        file: `${this.fiftLocation}/wallet-from-pk.fif`,
+        file: `${this.fiftLocation}/wallet-v2-from-pk.fif`,
         args: [privateKey, sourceAddress.toFift(), destAddress, seqNo, amount, '-C', message],
         generatedFiles: ['wallet-query.boc'],
       }));
