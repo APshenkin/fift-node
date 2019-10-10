@@ -6,7 +6,9 @@ class Fift {
     fiftLocation, libLocation, usePatchedFift = false, walletVersion = '',
   }) {
     if (typeof fiftLocation === 'undefined') {
-      this.fiftLocation = `${__dirname}/${usePatchedFift ? '/patchedSmartContracts' : '/smartContracts'}`;
+      // Hack for electron asar package
+      const basePath = __dirname.replace('app.asar', 'app.asar.unpacked');
+      this.fiftLocation = `${basePath}/${usePatchedFift ? '/patchedSmartContracts' : '/smartContracts'}`;
       this.libLocation = `${this.fiftLocation}/lib/`;
     } else {
       this.fiftLocation = fiftLocation;
