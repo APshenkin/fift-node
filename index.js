@@ -5,6 +5,7 @@ class Fift {
   constructor({
     fiftLocation, libLocation, usePatchedFift = false, walletVersion = '',
   }) {
+    this.usePatchedFift = usePatchedFift;
     if (typeof fiftLocation === 'undefined') {
       // Hack for electron asar package
       const basePath = __dirname.replace('app.asar', 'app.asar.unpacked');
@@ -56,13 +57,13 @@ class Fift {
       promise = this.run({
         file: `${this.fiftLocation}/new-wallet${this.walletPrefix}.fif`,
         args: [workchainId],
-        generatedFiles: ['new-wallet.pk', 'new-wallet.addr', 'new-wallet-query.boc'],
+        generatedFiles: ['new-wallet.pk', 'new-wallet.addr', 'new-wallet-query.boc'].concat(this.usePatchedFift ? ['new-wallet-external.hash'] : []),
       });
     } else {
       promise = this.run({
         file: `${this.fiftLocation}/new-wallet-from-pk${this.walletPrefix}.fif`,
         args: [workchainId, privateKey, 'new-wallet'],
-        generatedFiles: ['new-wallet.addr', 'new-wallet-query.boc'],
+        generatedFiles: ['new-wallet.addr', 'new-wallet-query.boc'].concat(this.usePatchedFift ? ['new-wallet-external.hash'] : []),
       });
     }
 
@@ -70,6 +71,7 @@ class Fift {
       privateKey: privateKey || res.files['new-wallet.pk'],
       address: Address.parseFromFift(res.files['new-wallet.addr']),
       creatingQuery: res.files['new-wallet-query.boc'],
+      creatingQueryHash: res.files['new-wallet-external.hash'],
     }));
   }
 
@@ -114,17 +116,20 @@ class Fift {
           `${filesDir}/${filenameBase}.addr`,
           `${filesDir}/${filenameBase}.pk`,
         ],
-        generatedFiles: ['wallet-query.boc'],
+        generatedFiles: ['wallet-query.boc'].concat(this.usePatchedFift ? ['wallet-query-external.hash'] : []),
       });
     } else {
       promise = Address.parseFromWalletPrivateKey({ privateKey, workchainId, fift: this }).then(sourceAddress => this.run({
         file: `${this.fiftLocation}/wallet-from-pk${this.walletPrefix}.fif`,
         args: [privateKey, sourceAddress.toFift(), destAddress, seqNo, amount, '-C', message],
-        generatedFiles: ['wallet-query.boc'],
+        generatedFiles: ['wallet-query.boc'].concat(this.usePatchedFift ? ['wallet-query-external.hash'] : []),
       }));
     }
 
-    return promise.then(res => res.files['wallet-query.boc']);
+    return promise.then(res => ({
+      txRaw: res.files['wallet-query.boc'],
+      externalTxId: res.files['wallet-query-external.hash'],
+    }));
   }
 }
 

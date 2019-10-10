@@ -13,6 +13,7 @@ describe('test patched contracts wallet v2', () => {
     assert.equal(res.address.workchainId, -1);
     assert.equal(res.address.account.toString('hex'), '472c8515f7f841da3b3c18214c0fab392a900497333a2dbd2528cec741558ada');
     assert.equal(res.creatingQuery, 'B5EE9C724101030100ED0002D789FE8E590A2BEFF083B476783042981F56725520092E66745B7A4A519D8E82AB15B4119D7CB36CD52E33000AB738B01AC3D71BA8C5ECA15DB322461345B01FBF6B11E4C3FDFD550CF5BA5A255DA0B618410CBC1C0B5FE8AA3D888BD104CE410D37A9E0800000001FFFFFFFF0010200AAFF0020DD2082014C97BA9730ED44D0D70B1FE0A4F2608308D71820D31FD31F01F823BBF263ED44D0D31FD3FFD15131BAF2A103F901541042F910F2A2F800029320D74A96D307D402FB00E8D1A4C8CB1FCBFFC9ED54004800000000C9FFBEF20D30674EB53F7BCBA6D84F9A2DCBEFA99DE0C880E53A0983132565C43E7D6539');
+    assert.equal(res.creatingQueryHash, '0197FD8F7C4D669308F195D92AB4A85213D80CBF44CA2B6BC3EB953546C680CB');
   });
 
   it('should create wallet address from public key', async () => {
@@ -32,6 +33,7 @@ describe('test patched contracts wallet v2', () => {
     assert.notEqual(res.privateKey, undefined);
     assert.notEqual(res.address, undefined);
     assert.notEqual(res.creatingQuery, undefined);
+    assert.notEqual(res.creatingQueryHash, undefined);
   });
 
   it('should equal wallet without PK and from PK', async () => {
@@ -44,6 +46,7 @@ describe('test patched contracts wallet v2', () => {
     });
 
     assert.equal(ethalon.creatingQuery, patched.creatingQuery);
+    assert.equal(ethalon.creatingQueryHash, patched.creatingQueryHash);
     assert.deepEqual(ethalon.address, patched.address);
   });
 
@@ -77,7 +80,8 @@ describe('test patched contracts wallet v2', () => {
       amount: '6.666',
     });
 
-    assert.ok(res);
+    assert.ok(res.txRaw);
+    assert.ok(res.externalTxId);
   });
 
   it('should create send gram message with message hello', async () => {
@@ -90,7 +94,8 @@ describe('test patched contracts wallet v2', () => {
       message: 'hello',
     });
 
-    assert.ok(res);
+    assert.ok(res.txRaw);
+    assert.ok(res.externalTxId);
   });
 
   it('should create send gram message using files', async () => {
@@ -102,7 +107,8 @@ describe('test patched contracts wallet v2', () => {
       amount: '6.666',
     });
 
-    assert.ok(res);
+    assert.ok(res.txRaw);
+    assert.ok(res.externalTxId);
   });
 
   // its unable to compare files in v2 wallet because there is timeout feature
