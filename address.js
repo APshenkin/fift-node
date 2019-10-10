@@ -2,10 +2,13 @@ const crc16 = require('crc16');
 const base64url = require('base64url');
 
 class Address {
-  constructor({ workchainId, account, fift }) {
+  constructor({
+    workchainId, account, fift, mainnet,
+  }) {
     this.workchainId = workchainId;
     this.account = account;
     this.fift = fift;
+    this.mainnet = mainnet;
   }
 
   static parseFromRaw(string) {
@@ -19,7 +22,24 @@ class Address {
   static parseFromUserFriendly(string) {
     const payload = base64url.toBuffer(string);
 
-    return new Address({ workchainId: payload.readInt8(1), account: payload.slice(2, 34) });
+    if (payload.byteLength !== 36) {
+      throw new Error('User Friendly address should contains 36 bytes');
+    }
+
+    const crc = crc16(payload.slice(0, 34));
+
+    if (Buffer.compare(Buffer.from(crc.toString(16).padStart(4, '0'), 'hex'), payload.slice(34, 36)) !== 0) {
+      throw new Error('Crc 16 mismatch');
+    }
+
+    const tag = payload.readInt8(0);
+
+    let main = false;
+    if (tag === 0x51 || tag === 0x11) {
+      main = true;
+    }
+
+    return new Address({ workchainId: payload.readInt8(1), account: payload.slice(2, 34), mainnet: main });
   }
 
   static parseFromFift(string) {

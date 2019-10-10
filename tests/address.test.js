@@ -1,10 +1,6 @@
 const assert = require('assert');
 const Address = require('../address');
 
-const Fift = require('../index');
-
-const fift = new Fift({ usePatchedFift: true });
-
 describe('address', () => {
   it('should parse raw address and show it to UserFriendly', async () => {
     const res = Address.parseFromRaw('-1:FCB91A3A3816D0F7B8C2C76108B8A9BC5A6B7A55BD79F8AB101C52DB29232260').toUserFriendly({ mainnet: true });
@@ -19,9 +15,10 @@ describe('address', () => {
   });
 
   it('should parse user friendly and show it to raw', async () => {
-    const res = Address.parseFromUserFriendly('Ef_8uRo6OBbQ97jCx2EIuKm8Wmt6Vb15-KsQHFLbKSMiYDJ4').toRaw();
+    const res = Address.parseFromUserFriendly('Ef_8uRo6OBbQ97jCx2EIuKm8Wmt6Vb15-KsQHFLbKSMiYDJ4');
 
-    assert.equal(res, '-1:FCB91A3A3816D0F7B8C2C76108B8A9BC5A6B7A55BD79F8AB101C52DB29232260');
+    assert.equal(res.mainnet, true);
+    assert.equal(res.toRaw(), '-1:FCB91A3A3816D0F7B8C2C76108B8A9BC5A6B7A55BD79F8AB101C52DB29232260');
   });
 
   it('should parse from fift hex file', async () => {

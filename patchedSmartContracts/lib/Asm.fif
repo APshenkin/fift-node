@@ -173,7 +173,7 @@ x{6E} @Defop ISNULL
 x{6F0} @Defop(4u) TUPLE
 x{6F00} @Defop NIL
 x{6F01} @Defop SINGLE
-x{6F02} dup @Defop PAIR @Defop CONS 
+x{6F02} dup @Defop PAIR @Defop CONS
 x{6F03} @Defop TRIPLE
 x{6F1} @Defop(4u) INDEX
 x{6F10} dup @Defop FIRST @Defop CAR
@@ -236,7 +236,7 @@ x{7F} @Defop TRUE
     { dup 16 fits
       { <b x{81} s, swap 16 i, }
       { 11 { dup 259 > abort"integer too large" 8 + 2dup fits } until
-        <b x{82} s, over 3 >> 2- 5 u, -rot i, 
+        <b x{82} s, over 3 >> 2- 5 u, -rot i,
       } cond
     } cond
   } cond
@@ -632,25 +632,25 @@ x{E2} @Defop IFELSE
 { `else: @endblk } : }>ELSE:
 { PUSHCONT { @normal? PUSHCONT IFELSE } @doafter<{ } : @doifelse
 { 1 { swap @normal? -rot PUSHCONT swap PUSHCONT IFELSE } does @doafter<{ } : @doifnotelse
-{ 
-  { dup `else eq? 
+{
+  { dup `else eq?
     { drop @doifelse }
     { dup `else: eq?
       { drop PUSHCONT IFJMP }
       { @normal? PUSHCONT IF
-      } cond 
-    } cond 
-  } @doafter<{ 
+      } cond
+    } cond
+  } @doafter<{
 } : IF:<{
-{ 
-  { dup `else eq? 
+{
+  { dup `else eq?
     { drop @doifnotelse }
     { dup `else: eq?
       { drop PUSHCONT IFNOTJMP }
       { @normal? PUSHCONT IFNOT
-      } cond 
-    } cond 
-  } @doafter<{ 
+      } cond
+    } cond
+  } @doafter<{
 } : IFNOT:<{
 x{E300} @Defop(ref) IFREF
 x{E301} @Defop(ref) IFNOTREF
@@ -677,12 +677,12 @@ x{E9} @Defop WHILEEND
 { `do @endblk } : }>DO<{
 { `do: @endblk } : }>DO:
 { PUSHCONT { @normal? PUSHCONT WHILE } @doafter<{ } : @dowhile
-{ 
-  { dup `do eq? 
-    { drop @dowhile } 
-    { `do: eq? not abort"`}>DO<{` expected" PUSHCONT WHILEEND 
-    } cond 
-  } @doafter<{ 
+{
+  { dup `do eq?
+    { drop @dowhile }
+    { `do: eq? not abort"`}>DO<{` expected" PUSHCONT WHILEEND
+    } cond
+  } @doafter<{
 } : WHILE:<{
 x{EA} @Defop AGAIN
 { }> PUSHCONT AGAIN } : }>AGAIN
@@ -708,8 +708,8 @@ x{ED1F} @Defop BLESSVARARGS
 { c4 PUSHCTR } : PUSHROOT
 { c4 POPCTR } : POPROOT
 x{ED6} dup @Defop(c) SETCONTCTR @Defop(c) SETCONT
-x{ED7} @Defop(c) SETRETCTR 
-x{ED8} @Defop(c) SETALTCTR 
+x{ED7} @Defop(c) SETRETCTR
+x{ED8} @Defop(c) SETALTCTR
 x{ED9} dup @Defop(c) POPSAVE @Defop(c) POPCTRSAVE
 x{EDA} dup @Defop(c) SAVE @Defop(c) SAVECTR
 x{EDB} dup @Defop(c) SAVEALT @Defop(c) SAVEALTCTR
@@ -756,6 +756,12 @@ x{EDF9} @Defop BOOLEVAL
   { PUSHINT c3 PREPAREVAR } cond
 } dup : PREPARE : PREPAREDICT
 //
+// inline support
+{ dup sbits { @addop } {
+  dup srefs 1- abort"exactly one reference expected in inline"
+  ref@ CALLREF } cond
+} : INLINE
+//
 // throwing and handling exceptions
 { dup 6 ufits
   { <b x{F22_} s, swap 6 u, }
@@ -785,9 +791,9 @@ x{F2FF} @Defop TRY
 x{F3} @Defop(4u,4u) TRYARGS
 { `catch @endblk } : }>CATCH<{
 { PUSHCONT { @normal? PUSHCONT TRY } @doafter<{ } : @trycatch
-{ 
+{
   { `catch eq? not abort"`}>CATCH<{` expected" @trycatch
-  } @doafter<{ 
+  } @doafter<{
 } : TRY:<{
 //
 // dictionary manipulation
@@ -937,7 +943,7 @@ x{F4A1} @Defop DICTUGETJMP
 x{F4A2} @Defop DICTIGETEXEC
 x{F4A3} @Defop DICTUGETEXEC
 { dup sbitrefs tuck 1 > swap 1 <> or abort"not a dictionary" swap 1 u@ over <> abort"not a dictionary" } : @chkdicts
-{ dup null? tuck { <s } ifnot drop not } : @chkdict 
+{ dup null? tuck { <s } ifnot drop not } : @chkdict
 { over @chkdict
   { swap <b x{F4A6_} s, swap ref, swap 10 u, @addopb }
   { nip swap NEWDICT swap PUSHINT }
@@ -1047,6 +1053,7 @@ x{FFF0} @Defop SETCPX
 //
 variable @proccnt
 variable @proclist
+variable @procdict
 19 constant @procdictkeylen
 { @proclist @ cons @proclist ! } : @proclistadd
 { dup @procdictkeylen fits not abort"procedure index out of range"
@@ -1061,26 +1068,39 @@ variable @proclist
     { swap @declproc }
   cond } : DECLMETHOD
   "main" @proclistadd
-  dictnew
+  dictnew @procdict !
 } : PROGRAM{
-{ dup sbits 1000 > { s>c <b swap ref, b> <s } if } : @adj-long-proc
-{ // d i s
-  @adj-long-proc swap rot @procdictkeylen idict!+ not abort"cannot define procedure, redefined?"
-} : PROC
-{ 2dup swap @procdictkeylen idict@ abort"procedure already defined"
-  1 { -rot @normal? b> <s PROC } does @doafter<{
-} : PROC:<{
-{ 0 swap @procdictkeylen idict@ not abort"`main` procedure not defined" drop
+{ over sbits < { s>c <b swap ref, b> <s } if } : @adj-long-proc
+{ // i s l
+  @adj-long-proc swap @procdict @ @procdictkeylen
+  idict!+ not abort"cannot define procedure, redefined?"
+  @procdict !
+} : @def-proc
+{ 1000 @def-proc } : PROC
+{ 0 @def-proc } : PROCREF
+{ @procdict @ @procdictkeylen idict@ abort"procedure already defined"
+} : @fail-ifdef
+{ over @fail-ifdef
+  2 { rot @normal? rot b> <s swap @def-proc drop } does
+  null swap @doafter<{
+} : @PROC:<{
+{ 1000 @PROC:<{ } : PROC:<{
+{ 0 @PROC:<{ } : PROCREF:<{
+{ dup @procdict @ @procdictkeylen idict@
+  { nip INLINE } { CALLDICT } cond
+} dup : INLINECALL : INLINECALLDICT
+{ 0 @procdict @ @procdictkeylen idict@ not abort"`main` procedure not defined" drop
 } : @chkmaindef
-{ dup @chkmaindef
+{ @chkmaindef
   @proclist @ { dup null? not } {
     uncons swap dup find not
     { +": undefined procedure name in list" abort } if
-    execute 3 pick @procdictkeylen idict@ not
+    execute @procdict @ @procdictkeylen idict@ not
     { +": procedure declared but left undefined" abort } if
     drop (forget)
   } while
   drop @proclist null! @proccnt 0!
+  @procdict dup @ swap null!
 } : }END
 forget @proclist  forget @proccnt
 { }END <{ SETCP0 swap @procdictkeylen DICTPUSHCONST DICTIGETJMP 11 THROWARG }> } : }END>
