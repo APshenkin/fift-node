@@ -23,10 +23,12 @@ if (platform === 'darwin') {
   throw new Error('unsupported platform for libfift');
 }
 
-const callback = ffi.Function('void', [StringArray, 'CString']);
+const init = () => {
+  const callback = ffi.Function('void', [StringArray, 'CString']);
 
-const fiftLib = ffi.Library(fiftlibLoc, {
-  run: ['void', ['CString', 'CString', StringArray, 'int', StringArray, 'int', StringArray, 'int', callback]],
-});
+  return ffi.Library(fiftlibLoc, {
+    run: ['void', ['CString', 'CString', StringArray, 'int', StringArray, 'int', StringArray, 'int', callback]],
+  });
+};
 
-module.exports = fiftLib;
+module.exports = init;

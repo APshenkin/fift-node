@@ -1,6 +1,6 @@
 {
   "name": "fift-node",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "Fift (Telegram Open Network) runner for Node.js",
   "main": "index.js",
   "scripts": {
@@ -18,9 +18,9 @@
   ],
   "dependencies": {
     "base64url": "^3.0.1",
-    "crc16": "^1.0.1",
-    "ffi": "^2.3.0",
-    "ref-array": "^1.2.0"
+    "@kronoslive/crc16": "^1.0.1",
+    "ffi": "github:APshenkin/node-ffi#ec0825b",
+    "ref-array": "github:APshenkin/ref-array#249413b"
   },
   "devDependencies": {
     "eslint": "^5.16.0",

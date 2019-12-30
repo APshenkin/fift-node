@@ -1,9 +1,9 @@
-const fiftLib = require('./fiftLib');
+const initFift = require('./fiftLib');
 const Address = require('./address');
 
 class Fift {
   constructor({
-    fiftLocation, libLocation, usePatchedFift = false, walletVersion = '',
+    fiftLocation, libLocation, usePatchedFift = false, walletVersion = '', lazyLoad = false,
   }) {
     this.usePatchedFift = usePatchedFift;
     if (typeof fiftLocation === 'undefined') {
@@ -16,10 +16,26 @@ class Fift {
       this.libLocation = libLocation;
     }
 
+    if (!lazyLoad) {
+      this._initLib();
+    }
+
     this.walletPrefix = '';
 
     if (walletVersion !== '') {
       this.walletPrefix = `-${walletVersion}`;
+    }
+
+    this.lib = () => {
+      this._initLib();
+
+      return this.fiftLib;
+    };
+  }
+
+  _initLib() {
+    if (typeof this.fiftLib === 'undefined') {
+      this.fiftLib = initFift();
     }
   }
 
@@ -30,7 +46,7 @@ class Fift {
     args.unshift('aba');
 
     return new Promise((resolve, reject) => {
-      fiftLib.run(file, this.libLocation, args, args.length, additionalFiles,
+      this.lib().run(file, this.libLocation, args, args.length, additionalFiles,
         additionalFiles.length, generatedFiles, generatedFiles.length, (res, err) => {
           if (err == null) {
             res.length = generatedFiles.length + 1;
