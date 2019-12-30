@@ -19,7 +19,7 @@
   "dependencies": {
     "base64url": "^3.0.1",
     "crc16": "github:APshenkin/crc16#e473649",
-    "ffi": "github:APshenkin/node-ffi#89f9ab2",
+    "ffi": "github:APshenkin/node-ffi#f7f80e1",
     "ref-array": "github:APshenkin/ref-array#6a270a3"
   },
   "devDependencies": {
