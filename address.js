@@ -1,4 +1,4 @@
-const crc16 = require('@kronoslive/crc16');
+const crc16 = require('crc16');
 const base64url = require('base64url');
 
 class Address {
